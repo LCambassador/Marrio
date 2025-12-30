@@ -29,7 +29,7 @@ const enemies = [
 ];
 
 let hammers = [];
-let gameWon = false; // ゴールしたかどうかのフラグ
+let gameWon = false;
 
 // 足場の設定
 const platforms = [
@@ -56,6 +56,7 @@ const keys = {
     up: false
 };
 
+// --- キーボード操作 ---
 document.addEventListener("keydown", function (e) {
     if (e.code === "ArrowRight") keys.right = true;
     if (e.code === "ArrowLeft") keys.left = true;
@@ -68,8 +69,31 @@ document.addEventListener("keyup", function (e) {
     if (e.code === "Space") keys.up = false;
 });
 
+// --- スマホ用タッチ操作 ---
+const btnLeft = document.getElementById("btnLeft");
+const btnRight = document.getElementById("btnRight");
+const btnJump = document.getElementById("btnJump");
+
+// 左ボタン
+btnLeft.addEventListener("touchstart", (e) => { e.preventDefault(); keys.left = true; });
+btnLeft.addEventListener("touchend", (e) => { e.preventDefault(); keys.left = false; });
+btnLeft.addEventListener("mousedown", () => { keys.left = true; }); // PCでのテスト用
+btnLeft.addEventListener("mouseup", () => { keys.left = false; });
+
+// 右ボタン
+btnRight.addEventListener("touchstart", (e) => { e.preventDefault(); keys.right = true; });
+btnRight.addEventListener("touchend", (e) => { e.preventDefault(); keys.right = false; });
+btnRight.addEventListener("mousedown", () => { keys.right = true; });
+btnRight.addEventListener("mouseup", () => { keys.right = false; });
+
+// ジャンプボタン
+btnJump.addEventListener("touchstart", (e) => { e.preventDefault(); keys.up = true; });
+btnJump.addEventListener("touchend", (e) => { e.preventDefault(); keys.up = false; });
+btnJump.addEventListener("mousedown", () => { keys.up = true; });
+btnJump.addEventListener("mouseup", () => { keys.up = false; });
+
+
 function update() {
-    // もしゴールしていたら、更新（ゲーム進行）は止めるが描画は続ける
     if (gameWon) {
         draw();
         requestAnimationFrame(update);
@@ -204,9 +228,8 @@ function update() {
 
     if (player.y > canvas.height) resetGame("落ちちゃった！");
 
-    // --- ゴール判定 ---
     if (checkCollision(player, goal)) {
-        gameWon = true; // ゴールフラグを立てる
+        gameWon = true;
         statusDiv.innerText = "ゴール！！おめでとう！！🎉";
         statusDiv.style.color = "#ffeb3b";
     }
@@ -245,7 +268,7 @@ function resetGame(message) {
     player.width = 30;
     player.height = 60;
     player.invincible = 0;
-    gameWon = false; // フラグもリセット
+    gameWon = false;
 
     hammers = [];
     items = [];
@@ -265,27 +288,31 @@ function checkCollision(rect1, rect2) {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // ゴールしている場合は背景を変える
     if (gameWon) {
-        // 背景を金色に
-        ctx.fillStyle = "rgba(255, 215, 0, 0.8)"; // 半透明のゴールド
+        ctx.fillStyle = "rgba(255, 215, 0, 0.8)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // GOALの文字
         ctx.fillStyle = "white";
         ctx.font = "bold 80px Arial";
         ctx.textAlign = "center";
+
+        // テキストにも影をつけて豪華にする
+        ctx.shadowColor = "rgba(0,0,0,0.5)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
         ctx.fillText("GOAL!!", canvas.width / 2, canvas.height / 2);
+
+        // 影のリセット
+        ctx.shadowColor = "transparent";
 
         ctx.font = "20px Arial";
         ctx.fillStyle = "#333";
         ctx.fillText("Congratulations!", canvas.width / 2, canvas.height / 2 + 50);
 
-        // ※背景が描画された後にキャラクターたちを描くか、
-        // あるいはキャラクターたちの後ろに背景を描くか選べますが、
-        // 今回は「お祝い画面」として上から被せました。
-        // もしキャラも見せたいなら、fillRectのこの処理を一番最初に書けばOKです。
-        // ここでは「GOAL演出」を目立たせるために一番最後に書きました（キャラは見えなくなります）。
+        // 描画設定を元に戻す（重要）
+        ctx.textAlign = "start";
         return;
     }
 
@@ -306,7 +333,7 @@ function draw() {
         if (b.active) {
             ctx.fillStyle = "#000";
             ctx.font = "20px Arial";
-            ctx.textAlign = "left"; // デフォルトに戻す
+            ctx.textAlign = "left";
             ctx.fillText("?", b.x + 8, b.y + 22);
         }
     }
