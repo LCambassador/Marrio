@@ -7,6 +7,9 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    /* スマホで長押し選択などを防ぐ */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .game-container {
@@ -31,10 +34,45 @@ canvas {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     display: block;
     margin: 0 auto;
+    /* スマホ画面からはみ出ないように縮小 */
+    max-width: 100%;
+    height: auto;
 }
 
 #status {
     margin-top: 10px;
     font-size: 18px;
     font-weight: bold;
+}
+
+/* --- スマホ用ボタンのスタイル --- */
+#touch-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+#touch-controls button {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
+    font-size: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    /* 丸いボタン */
+    cursor: pointer;
+    touch-action: manipulation;
+    /* タップの反応を良くする */
+}
+
+#touch-controls button:active {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+#btnJump {
+    width: 80px !important;
+    /* ジャンプボタンは少し横長 */
+    border-radius: 40px !important;
 }
