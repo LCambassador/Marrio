@@ -1,0 +1,40 @@
+body {
+    background-color: #222;
+    color: white;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.game-container {
+    text-align: center;
+}
+
+h1 {
+    margin: 0 0 10px 0;
+    color: #ffeb3b;
+}
+
+p {
+    margin-bottom: 20px;
+    color: #ccc;
+}
+
+canvas {
+    background-color: #87CEEB;
+    /* 空の色 */
+    border: 4px solid #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: block;
+    margin: 0 auto;
+}
+
+#status {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
